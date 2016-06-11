@@ -1,26 +1,55 @@
-// Clock stub file
-
-// To use the right term, this is the package *clause*.
-// You can document general stuff about the package here if you like.
 package clock
+import "fmt"
 
-// The value of testVersion here must match `targetTestVersion` in the file
-// clock_test.go.
-const testVersion = 3
 
-// Clock API as stub definitions.  No, it doesn't compile yet.
-// More details and hints are in clock_test.go.
+// as an aside, the stub code indicated testVersion 3, not sure why
+// as the test suite appears to be 4.
+const testVersion = 4
 
-type Clock // Complete the type definition.  Pick a suitable data type.
+// Go doesn't have a real modulus operator: '%' is remainder, 
+// so it doesn't work backwords - this is to provide that 
+// ability.
 
-func New(hour, minute int) Clock {
+func mod(x, y int) int {
+
+  mod := x % y; 
+  if mod < 0 { 
+    mod += y 
+  }
+  return mod
 }
 
-func (Clock) String() string {
+
+// struct with hours and minutes seems appropriate.
+
+type Clock struct { h, m int}
+
+// returns a new Clock
+
+func New(h, m int) Clock {
+
+  // if minutes are negative, we need to subtract 60
+  // to adjust for the impact on hours. Otherwise
+  // we end up being an hour off.
+  if m < 0 {
+    m -= 60
+  }
+  h += m / 60
+  m = mod(m, 60)
+  h = mod(h, 24)
+  return Clock { h, m }
 }
 
-func (Clock) Add(minutes int) Clock {
+// returns string representation of Clock
+
+func (c Clock) String() string {
+
+  return fmt.Sprintf("%02d:%02d", c.h, c.m)
 }
 
-// Remember to delete all of the stub comments.
-// They are just noise, and reviewers will complain.
+// Adds Minutes to Clock
+
+func (c Clock) Add(minutes int) Clock {
+
+  return New( c.h, c.m+minutes )
+}

@@ -6,7 +6,7 @@ const testVersion = 2
 type Kind string 
 
   const (
-    NaT Kind= "NaT"   // not a triangle
+    NaT Kind = "NaT"   // not a triangle
     Equ Kind = "Equ"  // equilateral
     Iso Kind = "Iso"  // isosceles
     Sca Kind = "Sca"  // scalene
